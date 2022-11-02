@@ -1,0 +1,5 @@
+# required packages
+pytest
+ipython
+pydantic
+black
