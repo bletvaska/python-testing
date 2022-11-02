@@ -8,7 +8,7 @@ class BankAccount(BaseModel):
     transactions: list[dict] = []
 
     def credit(self, amount):
-        self.balance = amount
+        self.balance += amount
 
     @validator("iban", always=True, pre=True)
     def set_iban(cls, v):
