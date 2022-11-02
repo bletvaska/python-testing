@@ -16,3 +16,11 @@ Znalosť jazyka Python na tomto školení je nutná.
 * Code Coverage.
 * Fixtures
 * Organizácia testov, vzor AAA, odporúčania pre písanie dobrých testov.
+
+
+## Prostredie
+
+Inštalujeme *VS Code* s týmito rozšíreniami:
+
+* [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
+* [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)

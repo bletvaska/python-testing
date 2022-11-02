@@ -1,5 +1,7 @@
-# required packages
+# project packages
+pydantic
+
+# dev packages
 pytest
 ipython
-pydantic
 black
