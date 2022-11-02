@@ -47,10 +47,22 @@ def test_when_negative_amount_is_deposited_then_valueerror_exception_should_be_t
         account.deposit(amount)
 
 
-def test_when_non_integer_type_is_deposited_then_expect_typeerror_exception():
+@pytest.mark.wip
+@pytest.mark.parametrize(
+    "amount",
+    [
+        True,
+        12.3,
+        "jano",
+        BankAccount(owner="jano"),
+        {},
+        [],
+        (0,),
+    ],
+)
+def test_when_non_integer_type_is_deposited_then_expect_typeerror_exception(amount):
     # arrange
-    amount = BankAccount() # 'stodrisatdva evry aj patdesiat centov'
-    account = BankAccount(owner='emily holmes')
+    account = BankAccount(owner="emily holmes")
 
     # act + assert
     with pytest.raises(TypeError):
