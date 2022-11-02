@@ -7,7 +7,7 @@ class BankAccount(BaseModel):
     balance: int = 0
     transactions: list[dict] = []
 
-    def credit(self, amount):
+    def deposit(self, amount):
         if amount < 0:
             raise ValueError('Amount should be positive integer.')
         self.balance += amount

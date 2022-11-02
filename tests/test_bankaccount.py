@@ -16,20 +16,20 @@ def test_when_100_is_added_to_empty_account_then_balance_should_be_100():
     account = BankAccount(owner="janko hrasko")
 
     # act
-    account.credit(100)
+    account.deposit(100)
 
     # assert
     assert account.balance == 100, "Balance should be 100."
 
 
-def test_when_credit_is_deposited_to_account_with_nonzero_balance_then_final_balance_is_higher():
+def test_when_deposit_to_account_with_nonzero_balance_then_final_balance_is_higher():
     # arrange
     old_balance = 50
     deposit = 80
     account = BankAccount(owner="janko hrasko", balance=old_balance)
 
     # act
-    account.credit(deposit)
+    account.deposit(deposit)
 
     # assert
     assert (
@@ -44,4 +44,4 @@ def test_when_negative_amount_is_deposited_then_valueerror_exception_should_be_t
 
     # act + assert
     with pytest.raises(ValueError):
-        account.credit(amount)
+        account.deposit(amount)
