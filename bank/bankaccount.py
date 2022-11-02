@@ -8,6 +8,8 @@ class BankAccount(BaseModel):
     transactions: list[dict] = []
 
     def credit(self, amount):
+        if amount < 0:
+            raise ValueError('Amount should be positive integer.')
         self.balance += amount
 
     @validator("iban", always=True, pre=True)
