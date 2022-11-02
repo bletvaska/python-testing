@@ -2,6 +2,7 @@ __pycache__/
 .idea/
 .vscode/
 .pytest_cache/
+venv/
 .coverage
 htmlcov/
 report.html
