@@ -3,6 +3,8 @@ pydantic
 
 # dev packages
 pytest
+pytest-html
+pytest-cov
 ipython
 black
 faker
