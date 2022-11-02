@@ -1,11 +1,14 @@
+from faker import Faker
 import pytest
 
 from bank.bankaccount import BankAccount
 
+faker = Faker()
+
 
 @pytest.fixture
 def empty_bankaccount():
-    account = BankAccount(owner="janko hrasko")
+    account = BankAccount(owner=faker.name())
     yield account
 
 
@@ -30,8 +33,8 @@ def test_when_deposit_to_account_with_nonzero_balance_then_final_balance_is_high
     empty_bankaccount,
 ):
     # arrange
-    old_balance = 50
-    deposit = 80
+    old_balance = faker.random_int(10, 1000)
+    deposit = faker.random_int(10, 1000)
     empty_bankaccount.deposit(old_balance)
 
     # act
@@ -43,7 +46,9 @@ def test_when_deposit_to_account_with_nonzero_balance_then_final_balance_is_high
     ), f"Balance should be {old_balance + deposit}."
 
 
-def test_when_negative_amount_is_deposited_then_valueerror_exception_should_be_thrown(empty_bankaccount):
+def test_when_negative_amount_is_deposited_then_valueerror_exception_should_be_thrown(
+    empty_bankaccount,
+):
     # arrange
     amount = -100
 
@@ -65,8 +70,9 @@ def test_when_negative_amount_is_deposited_then_valueerror_exception_should_be_t
         (0,),
     ],
 )
-def test_when_non_integer_type_is_deposited_then_expect_typeerror_exception(amount, empty_bankaccount):
+def test_when_non_integer_type_is_deposited_then_expect_typeerror_exception(
+    amount, empty_bankaccount
+):
     # act + assert
     with pytest.raises(TypeError):
         empty_bankaccount.deposit(amount)
-
