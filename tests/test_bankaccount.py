@@ -45,3 +45,13 @@ def test_when_negative_amount_is_deposited_then_valueerror_exception_should_be_t
     # act + assert
     with pytest.raises(ValueError):
         account.deposit(amount)
+
+
+def test_when_non_integer_type_is_deposited_then_expect_typeerror_exception():
+    # arrange
+    amount = BankAccount() # 'stodrisatdva evry aj patdesiat centov'
+    account = BankAccount(owner='emily holmes')
+
+    # act + assert
+    with pytest.raises(TypeError):
+        account.deposit(amount)
