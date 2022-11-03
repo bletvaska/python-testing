@@ -10,12 +10,15 @@ Znalosť jazyka Python na tomto školení je nutná.
 
 * Úvod do programovania riadeného testami.
 * Písanie funkčných testov v rámci pytest.
+* Test cases vs Test suites.
+* Vybrané rozšírenia pre rámec pytest.
 * Testovanie webových stránok pomocou Selenium webdriver-a.
 * Testovanie REST API.
 * Tvorba reportov s výsledkami testov.
 * Code Coverage.
-* Fixtures
-* Organizácia testov, vzor AAA, odporúčania pre písanie dobrých testov.
+* Fixtures.
+* Organizácia testov a vzor AAA.
+* Odporúčania pre písanie dobrých testov.
 
 
 ## Prostredie

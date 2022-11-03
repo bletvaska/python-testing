@@ -19,6 +19,21 @@ class BankAccount(BaseModel):
         # make deposit
         self.balance += amount
 
+    def withdraw(self, amount: int):
+        # is amount integer?
+        if type(amount) != int:
+            raise TypeError('Amount should be of type integer.')
+
+        # is amount positive integer or 0?
+        if amount <= 0:
+            raise ValueError('Amount should be greater than 0.')
+
+        # are there enough money?
+        if self.balance < amount:
+            raise ValueError('Not enough funds.')
+
+        self.balance -= amount
+
     @validator("iban", always=True, pre=True)
     def set_iban(cls, v):
         return "SK1234567890"
