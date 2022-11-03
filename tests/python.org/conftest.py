@@ -9,6 +9,6 @@ def driver():
     driver.quit()
 
 
-@pytest.fixture(scope="session")
-def base_url():
-    yield "https://www.python.org"
+# @pytest.fixture(scope="session")
+# def base_url():
+#     yield "https://www.python.org"

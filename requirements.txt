@@ -5,6 +5,7 @@ pydantic
 pytest
 pytest-html
 pytest-cov
+pytest-base-url
 ipython
 black
 faker

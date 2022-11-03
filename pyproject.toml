@@ -8,6 +8,7 @@ addopts = [
 ]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+base_url = "https://www.python.org"
 
 
 [tool.black]
