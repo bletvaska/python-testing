@@ -1,16 +1,8 @@
 
 # ak vyberiem z uctu 100 evry, tak sa zostatok znizi o 100 evry
-from faker import Faker
 import pytest
 
 from bank.bankaccount import BankAccount
-
-faker = Faker()
-
-@pytest.fixture
-def empty_bankaccount():
-    account = BankAccount(owner=faker.name())
-    yield account
 
 
 def test_when_withdrawing_100_then_balance_will_decrease_of_100(empty_bankaccount):

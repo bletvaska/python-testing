@@ -5,11 +5,6 @@ from bank.bankaccount import BankAccount
 
 faker = Faker()
 
-@pytest.fixture
-def empty_bankaccount():
-    account = BankAccount(owner=faker.name())
-    yield account
-
 
 def test_when_100_is_added_to_empty_account_then_balance_should_be_100(empty_bankaccount):
     # act
