@@ -8,3 +8,4 @@ pytest-cov
 ipython
 black
 faker
+selenium
