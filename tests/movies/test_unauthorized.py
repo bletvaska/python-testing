@@ -49,3 +49,29 @@ def test_when_valid_parse_app_id_was_provided_then_expect_error_message():
 
     # assert
     assert response.json() == expected
+
+
+def test_when_invalid_parse_app_id_was_provided_then_expect_status_code_401(faker):
+    # arrange
+    url = "https://parseapi.back4app.com/classes/movies"
+    headers = {"X-Parse-Application-Id": faker.password()}
+    expected = 401
+
+    # act
+    response = requests.get(url, headers=headers)
+
+    # assert
+    assert response.status_code == expected
+
+
+def test_when_invalid_parse_app_id_was_provided_then_expect_error_message(faker):
+    # arrange
+    url = "https://parseapi.back4app.com/classes/movies"
+    headers = {"X-Parse-Application-Id": faker.password()}
+    expected = {"error": "unauthorized"}
+
+    # act
+    response = requests.get(url, headers=headers)
+
+    # assert
+    assert response.json() == expected
