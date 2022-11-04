@@ -25,10 +25,10 @@ def test_when_request_without_keys_then_expect_error_message(base_url):
     assert response.json() == expected
 
 
-def test_when_valid_parse_app_id_was_provided_then_expect_status_code_403(base_url):
+def test_when_valid_parse_app_id_was_provided_then_expect_status_code_403(base_url, headers):
     # arrange
     url = f"{base_url}/classes/movies"
-    headers = {"X-Parse-Application-Id": "axACcyh0MTO3z42rUN8vFHfyAgE22VRjd3IJOwlJ"}
+    headers = {"X-Parse-Application-Id": headers['X-Parse-Application-Id']}
     expected = 403
 
     # act
@@ -38,10 +38,10 @@ def test_when_valid_parse_app_id_was_provided_then_expect_status_code_403(base_u
     assert response.status_code == expected
 
 
-def test_when_valid_parse_app_id_was_provided_then_expect_error_message(base_url):
+def test_when_valid_parse_app_id_was_provided_then_expect_error_message(base_url, headers):
     # arrange
     url = f"{base_url}/classes/movies"
-    headers = {"X-Parse-Application-Id": "axACcyh0MTO3z42rUN8vFHfyAgE22VRjd3IJOwlJ"}
+    headers = {"X-Parse-Application-Id": headers['X-Parse-Application-Id']}
     expected = {"error": "unauthorized"}
 
     # act
