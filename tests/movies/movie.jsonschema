@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Movie Entry",
+  "description": "Movie entry from MovieDB.",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Movie title."
+    },
+    "objectId": {
+      "type": "string",
+      "description": "Back4App unique id."
+    },
+    "year": {
+      "type": "integer",
+      "description": "Movie release year.",
+      "minimum": 1880,
+      "maximum": 2022
+    },
+    "genres": {
+      "type": "array",
+      "description": "Genres of the movie",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Action",
+          "Drama",
+          "War",
+          "Horror",
+          "Thriller",
+          "Comedy",
+          "Sci-Fi"
+        ]
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "Date of movie entry creation",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d*Z$"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "objectId",
+    "title",
+    "year",
+    "genres",
+    "createdAt",
+    "updatedAt"
+  ]
+}

@@ -34,10 +34,10 @@ def test_when_valid_keys_are_provided_then_expect_content_of_type_json(base_url,
     response = session.get(url, headers=headers)
 
     # assert
-    assert response.headers['Content-Type'].startswith('application/json')
+    assert response.headers["Content-Type"].startswith("application/json")
 
 
-@pytest.mark.parametrize("key",['objectId', 'title', 'year', 'genres', 'createdAt', 'updatedAt'])
+@pytest.mark.parametrize("key", ["objectId", "title", "year", "genres", "createdAt", "updatedAt"])
 def test_when_valid_keys_are_provided_then_expect_keys_in_json(base_url, headers, key, session):
     # arrange
     url = f"{base_url}/classes/movies/WHyejDIzEv"
