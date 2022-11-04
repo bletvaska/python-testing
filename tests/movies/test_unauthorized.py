@@ -1,9 +1,9 @@
 import requests
 
 
-def test_when_request_without_keys_then_expect_status_code_401():
+def test_when_request_without_keys_then_expect_status_code_401(base_url):
     # arrange
-    url = "https://parseapi.back4app.com/classes/movies"
+    url = f"{base_url}/classes/movies"
     expected = 401
 
     # act
@@ -13,9 +13,9 @@ def test_when_request_without_keys_then_expect_status_code_401():
     assert response.status_code == expected
 
 
-def test_when_request_without_keys_then_expect_error_message():
+def test_when_request_without_keys_then_expect_error_message(base_url):
     # arrange
-    url = "https://parseapi.back4app.com/classes/movies"
+    url = f"{base_url}/classes/movies"
     expected = {"error": "unauthorized"}
 
     # act
@@ -25,9 +25,9 @@ def test_when_request_without_keys_then_expect_error_message():
     assert response.json() == expected
 
 
-def test_when_valid_parse_app_id_was_provided_then_expect_status_code_403():
+def test_when_valid_parse_app_id_was_provided_then_expect_status_code_403(base_url):
     # arrange
-    url = "https://parseapi.back4app.com/classes/movies"
+    url = f"{base_url}/classes/movies"
     headers = {"X-Parse-Application-Id": "axACcyh0MTO3z42rUN8vFHfyAgE22VRjd3IJOwlJ"}
     expected = 403
 
@@ -38,9 +38,9 @@ def test_when_valid_parse_app_id_was_provided_then_expect_status_code_403():
     assert response.status_code == expected
 
 
-def test_when_valid_parse_app_id_was_provided_then_expect_error_message():
+def test_when_valid_parse_app_id_was_provided_then_expect_error_message(base_url):
     # arrange
-    url = "https://parseapi.back4app.com/classes/movies"
+    url = f"{base_url}/classes/movies"
     headers = {"X-Parse-Application-Id": "axACcyh0MTO3z42rUN8vFHfyAgE22VRjd3IJOwlJ"}
     expected = {"error": "unauthorized"}
 
@@ -51,9 +51,9 @@ def test_when_valid_parse_app_id_was_provided_then_expect_error_message():
     assert response.json() == expected
 
 
-def test_when_invalid_parse_app_id_was_provided_then_expect_status_code_401(faker):
+def test_when_invalid_parse_app_id_was_provided_then_expect_status_code_401(faker, base_url):
     # arrange
-    url = "https://parseapi.back4app.com/classes/movies"
+    url = f"{base_url}/classes/movies"
     headers = {"X-Parse-Application-Id": faker.password()}
     expected = 401
 
@@ -64,9 +64,9 @@ def test_when_invalid_parse_app_id_was_provided_then_expect_status_code_401(fake
     assert response.status_code == expected
 
 
-def test_when_invalid_parse_app_id_was_provided_then_expect_error_message(faker):
+def test_when_invalid_parse_app_id_was_provided_then_expect_error_message(faker, base_url):
     # arrange
-    url = "https://parseapi.back4app.com/classes/movies"
+    url = f"{base_url}/classes/movies"
     headers = {"X-Parse-Application-Id": faker.password()}
     expected = {"error": "unauthorized"}
 
