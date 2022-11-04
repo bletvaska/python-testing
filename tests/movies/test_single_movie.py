@@ -1,5 +1,6 @@
+import json
+from jsonschema import validate
 import pytest
-import requests
 
 
 def test_when_request_without_keys_then_expect_status_code_401(base_url, session):
@@ -47,3 +48,13 @@ def test_when_valid_keys_are_provided_then_expect_keys_in_json(base_url, headers
 
     # assert
     assert key in response.json()
+
+
+def test_when_movie_is_returned_then_it_should_pass_through_jsonschema_validation(base_url, headers, session, movie_schema):
+    # arrange
+    url = f"{base_url}/classes/movies/WHyejDIzEv"
+    response = session.get(url, headers=headers)
+    instance = response.json()
+
+    # act / assert
+    validate(instance=instance, schema=movie_schema)

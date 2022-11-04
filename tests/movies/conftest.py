@@ -1,3 +1,4 @@
+import json
 import pytest
 import requests
 
@@ -24,3 +25,24 @@ def session():
     with requests.session() as session:
         yield session
 
+
+@pytest.fixture(scope="module")
+def movie(base_url, headers, session):
+    # setup
+    payload = {"title": "The Fabelmans", "year": 2022, "genres": ["Drama"]}
+
+    result = session.post(f"{base_url}/classes/movies", headers=headers, json=payload)
+    data = result.json()
+
+    yield result
+
+    # teardown
+    session.delete(f"{base_url}/classes/movies/{data['objectId']}", headers=headers)
+
+
+@pytest.fixture(scope='session')
+def movie_schema():
+    with open("tests/movies/movie.schema.json") as file:
+        schema = json.load(file)
+
+    yield schema
