@@ -1,6 +1,7 @@
 # project packages
 pydantic
 requests
+jsonschema
 
 # dev packages
 pytest
