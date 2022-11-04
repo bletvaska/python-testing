@@ -19,6 +19,14 @@ nainštalovať aspoň rozšírenie pre Chrome/Chromium s názvom Postman
 mame niekolko nastrojov. z prikazoveho riadku vieme pouzit httpie:
 
 ```bash
+$ http https://parseapi.back4app.com/classes/movies \
+  X-Parse-Application-Id:axACcyh0MTO3z42rUN8vFHfyAgE22VRjd3IJOwlJ \
+  X-Parse-REST-API-Key:sQAPUPRNJg2GpZ9f0fXZaALSvekT7N2KmdM8kBWk
+```
+
+a okrem toho aj `curl`:
+
+```bash
 $ http https://parseapi.back4app.com/classes/artists/ \
   X-Parse-Application-Id:fG4xbiuMg3nXmkiaVOoEd0KhwFLn0B8RX3dO9T2V \
   X-Parse-REST-API-Key:fHofHzmvUXYE2sITHC9eFOQnovsIFOqUGTglxDge

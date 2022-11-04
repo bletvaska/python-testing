@@ -1,5 +1,6 @@
 # project packages
 pydantic
+requests
 
 # dev packages
 pytest
@@ -10,3 +11,4 @@ ipython
 black
 faker
 selenium
+httpie
