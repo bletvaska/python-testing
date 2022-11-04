@@ -17,7 +17,10 @@ def headers():
 
 @pytest.fixture(scope="module")
 def session():
-    session = requests.session()
-    yield session
-    session.close()
+    # session = requests.session()
+    # yield session
+    # session.close()
+
+    with requests.session() as session:
+        yield session
 
