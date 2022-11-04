@@ -12,7 +12,12 @@ nainštalovať aspoň rozšírenie pre Chrome/Chromium s názvom Postman
 
 ## Anatomy of HTTP Request
 
+![Anatomy of HTTP Request ([source](https://www.webdevdrops.com/en/http-primer-for-frontend-developers-f091a2070637/))](images/anatomy.of.http.request.png)
+
+
 ## Anatomy of HTTP Response
+
+![Anatomy of HTTP Response ([source](https://www.webdevdrops.com/en/http-primer-for-frontend-developers-f091a2070637/))](images/anatomy.of.http.response.png)
 
 ## HTTP Client from CLI
 
@@ -297,10 +302,10 @@ ValidationError: 'Invalid' is not of type 'number'
 
 ## Links
 
-* http://docs.python-requests.org/en/master/
+* [Requests: HTTP for Humans™](https://requests.readthedocs.io/en/latest/) - Domovská stránka modulu `requests`
+* [Nauč se Python!: Requests](http://naucse.python.cz/lessons/intro/requests/)
 * https://httpstatuses.com/
 * https://www.back4app.com/
 * https://www.youtube.com/watch?v=mZ8_QgJ5mbs
-* http://naucse.python.cz/lessons/intro/requests/
 * http://httpbin.org/
 * HTTP primer for frontend developers
