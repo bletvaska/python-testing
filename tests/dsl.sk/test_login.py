@@ -1,6 +1,8 @@
+import pytest
 from selenium.webdriver.common.by import By
 
 
+@pytest.mark.skip
 def test_if_correct_login_and_passwords_are_entered_then_current_url_will_be_dsl(driver):
     # arrange
     username = driver.find_element(By.XPATH, '//input[@name="login"]')
