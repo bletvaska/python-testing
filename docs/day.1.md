@@ -1,5 +1,8 @@
 # Day 1: The Bank Account
 
+úvod:
+* o teoretických veciach sa budeme rozprávať postupne, aby som vás zbytočne nezahltil hneď na začiatku
+
 
 ## Čo je to test?
 
@@ -20,10 +23,26 @@ Prečo by som mal testovať?
 
 ## `assert`
 
+* kľúčové slovo jazyka
+* tvrdenie, ktoré môže byť buď pravdivé alebo nepravdívé
+
 
 ## Pytest
 
-![Pytest](https://bletvaska.github.io/2022/05-pytest.101/images/logo-pytest.png)
+![Pytest](images/logo-pytest.png)
+
+* samostatná knižnica, ktorá nie je súčasťou štandardnej knižnice jazyka Python
+    * súčasťou štandardnej knižnice je modul `unittest`
+
+* Guido Van Rosum povedal:
+
+  > Všetci by mali používať Pytest
+
+* Pytest zvláda aj testy napísané pomocou modulu `unittest` alebo `nose`
+
+* je rozšíriteľný pomocou rozličných rozšírení
+  * API pre ich tvorbu
+  * existujú desiatky/stovky rozšírení
 
 inštalácia:
 
@@ -32,23 +51,18 @@ $ pip install pytest
 ```
 
 
-
-
-## Ako písať dobré testy
-
-1. Test má byť **atomický**.
-2. Jeden test vždy testuje **jednu vec**.
-3. V jednom teste vždy len **jeden `assert`**.
-
-
-## when/if - then/expect
-
-
-
-
 ## The Bank Account Intro
 
-Počas tohto lab-u si vyskúšame, ako vyzerá **vývoj riadený testami** (TDD) - celý proces **Red-Green-Refactor**. V rámci lab-u budeme vytvárať testy pre objekt reprezentujúci bankový účet používateľa. Pomocou tejto triedy bude možné:
+Počas tohto lab-u si vyskúšame, ako vyzerá **vývoj riadený testami** (TDD) - celý proces **Red-Green-Refactor**. V rámci lab-u budeme vytvárať testy pre objekt reprezentujúci bankový účet používateľa.
+
+cielom bude vytvorit bankovy ucet, o ktorom budeme vediet tieto informacie:
+
+* kazdy bankovy ucet bude mat svojho vlastnika - `.owner`
+* kazdy bankovy ucet bude mat definovany IBAN - `.iban`
+* kazdy bankovy ucet bude mat zostatok na ucte - `.balance`
+* nad kazdym bankovym uctom bude existovat zoznam transakcii - `.transactions`
+
+no a s uctom budeme vediet robit tieto operacie:
 
 * vytvoriť nový bankový účet, ktorého zostatok bude priamo po vytvorení `0`
 * zistiť aktuálny zostatok na účte (metóda `get_balance()`)
@@ -73,21 +87,7 @@ classDiagram
     BankAccount : +get_balance() int
 ```
 
-
-## Bank Account
-
-cielom bude vytvorit bankovy ucet, o ktorom budeme vediet tieto informacie:
-
-* kazdy bankovy ucet bude mat svojho vlastnika - `.owner`
-* kazdy bankovy ucet bude mat definovany IBAN - `.iban`
-* kazdy bankovy ucet bude mat zostatok na ucte - `.balance`
-* nad kazdym bankovym uctom bude existovat zoznam transakcii - `.transactions`
-
-no a s uctom budeme vediet robit tieto operacie:
-
-* vlozit na ucet peniaze - `.credit(amount)`
-* vybrat z uctu peniaze - `.withdraw(amount)`
-* zistit zozstatok penazi na ucte - `.balance`
+Pre popularizáciu a zjednodušenie budeme pre reprezentáciu bankového účtu používať modul [`pydantic`](https://docs.pydantic.dev/latest/).
 
 
 ## Red-Green-Refactor
@@ -140,9 +140,9 @@ Navrhnite a vytvorte test, pomocou ktorého overíte, že ak na účet vložíte
  Pre vkladanie peňazí na účet budeme používať metódu `deposit()`. V rámci testu teda:
 
 
-vytvoríme nový účet (výška účtu bude po vytvorení 0)
-vložíme na účet 1000 eur
-otestujeme, či sa na účte týchto 1000 eur nachádza
+1. vytvoríme nový účet (výška účtu bude po vytvorení 0)
+2. vložíme na účet 1000 eur
+3. otestujeme, či sa na účte týchto 1000 eur nachádza
 
 ```python
 def test_account_balance_after_thousand_euro_was_given():
@@ -154,7 +154,7 @@ def test_account_balance_after_thousand_euro_was_given():
 
 Spustite a spojazdnite test.
 
-Ak teraz spustíte test, tento samozrejme skončí neúspešne, keďže sa v triede BankAccount nenachádza metóda `deposit()`. Začneme teda jej vytvorením:
+Ak teraz spustíte test, tento samozrejme skončí neúspešne, keďže sa v triede `BankAccount` nenachádza metóda `deposit()`. Začneme teda jej vytvorením:
 
 ```python
 def deposit(self, amount):
@@ -179,6 +179,23 @@ Budeme preto musieť vytvoriť konštruktor, v ktorom triedu BankAccount inicial
 def __init__(self):
    self.amount = 0
 ```
+
+
+## Ako písať dobré testy
+
+1. Test má byť **atomický**.
+2. Jeden test vždy testuje **jednu vec**.
+3. V jednom teste vždy len **jeden `assert`**.
+
+Dodržanie týchto podmienok má za následok, že budeme vytvárať veľký počet malých testov.
+
+
+## Naming Conventions
+
+* existuje mnoho odporúčaní, ako pomenovávať testy
+* odporúčam tento, ktorý vychádza z BDD:
+  > when/if - then/expect
+
 
 
 ## Testovanie výnimiek
@@ -503,6 +520,9 @@ addopts = [
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 ```
+
+
+## Daily Cheatsheet
 
 
 ## Resources
