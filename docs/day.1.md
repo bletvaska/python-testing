@@ -18,6 +18,22 @@ Prečo by som mal testovať?
 ## Kvíz
 
 
+## `assert`
+
+
+## Pytest
+
+![Pytest](https://bletvaska.github.io/2022/05-pytest.101/images/logo-pytest.png)
+
+inštalácia:
+
+```bash
+$ pip install pytest
+```
+
+
+
+
 ## Ako písať dobré testy
 
 1. Test má byť **atomický**.
@@ -25,11 +41,14 @@ Prečo by som mal testovať?
 3. V jednom teste vždy len **jeden `assert`**.
 
 
+## when/if - then/expect
+
+
 
 
 ## The Bank Account Intro
 
-Počas tohto lab-u si vyskúšame priebeh TDD - celý proces Red-Green-Refactor. V rámci lab-u budeme vytvárať testy pre objekt reprezentujúci bankový účet používateľa. Pomocou tejto triedy bude možné:
+Počas tohto lab-u si vyskúšame, ako vyzerá **vývoj riadený testami** (TDD) - celý proces **Red-Green-Refactor**. V rámci lab-u budeme vytvárať testy pre objekt reprezentujúci bankový účet používateľa. Pomocou tejto triedy bude možné:
 
 * vytvoriť nový bankový účet, ktorého zostatok bude priamo po vytvorení `0`
 * zistiť aktuálny zostatok na účte (metóda `get_balance()`)
@@ -39,6 +58,20 @@ Počas tohto lab-u si vyskúšame priebeh TDD - celý proces Red-Green-Refactor.
 
 Vždy však musí platiť podmienka, že výška bankového účtu musí byť vyššia ako 0. Pre jednoduchosť budú všetky hodnoty reprezentujúce množstvo peňazí na účte typu integer.
 
+
+```mermaid
+---
+title: "Bankový účet: Diagram tried"
+---
+classDiagram
+    class BankAccount
+    BankAccount : +str iban
+    BankAccount : +str owner
+    BankAccount : +int balance
+    BankAccount : +deposit(amount)
+    BankAccount : +withdraw(amount)
+    BankAccount : +get_balance() int
+```
 
 
 ## Bank Account
@@ -58,6 +91,8 @@ no a s uctom budeme vediet robit tieto operacie:
 
 
 ## Red-Green-Refactor
+
+![Red-Green-Refactor](https://miro.medium.com/v2/resize:fit:700/1*tZSwCigaTaJdovyWlp5uBQ.jpeg)
 
 * zivotny cyklus programovania riadeneho testami
 * neustaly cyklus - uzavrety kruh, ktory nema zaciatok
