@@ -8,6 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 pydantic = "^2.6.3"
+pytest-cov = "^4.1.0"
+pytest-html = "^4.1.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -17,4 +19,15 @@ ipython = "^8.22.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--html=reports/report.html",
+    "--self-contained-html",
+    "--cov",
+    "--cov-report=html:reports/coverage/",
+    "--cov-report=term"
+]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
 
