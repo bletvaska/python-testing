@@ -1,6 +1,16 @@
 # Day 1: The Bank Account
 
-úvod:
+## Initial Configuration
+
+**Upozornenie:** Pre vytvorenie projektu nepoužívať `poetry`, ale vystačiť si len so štandardným modulom `virtualenv`. Zbytočne zdržuje pri rozličných prostrediach a pre rozličné úrovne účastníkov prináša viac problémov ako úžitku :-(
+
+V prípade použitia _VS Code_ je potrebné nainštalovať rozšírenie:
+
+* [Python Test Explorer](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter)
+
+
+## Na úvod
+
 * o teoretických veciach sa budeme rozprávať postupne, aby som vás zbytočne nezahltil hneď na začiatku
 
 
@@ -12,7 +22,6 @@ Test je kód, ktorý sa spúšťa na overenie správnosti iného kódu.
 
 Prečo by som mal testovať?
 
-
 * dokázať, že kód pracuje podľa požiadaviek
 * ukázať iným, ako sa váš kód dá používať
 * vložiť do kódu bezpečnostnú poistku pre zmeny v budúcnosti
@@ -21,10 +30,11 @@ Prečo by som mal testovať?
 ## Kvíz
 
 
-## `assert`
+## Príkaz `assert`
 
 * kľúčové slovo jazyka
-* tvrdenie, ktoré môže byť buď pravdivé alebo nepravdívé
+* Slovo `assertion` je po slovensky tvrdenie. Príkazom `assert` teda budeme overovať pravdivosť tvrdení. Tie teda môžu byť buď pravdivé alebo nepravdívé.
+* ak je tvrdenie nepravdivé, príkaz skončí s výnimkou `AssertionError`
 
 
 ## Pytest
@@ -36,7 +46,8 @@ Prečo by som mal testovať?
 
 * Guido Van Rosum povedal:
 
-  > Všetci by mali používať Pytest
+  > "Everybody is using pytest anyway…"
+  > -- Guido van Rosum
 
 * Pytest zvláda aj testy napísané pomocou modulu `unittest` alebo `nose`
 
@@ -115,7 +126,24 @@ def test1():
 ```
 
 
-Test spustime rucne - zavolame funkciu `test1()`.
+Test spustíme ručne. To môžeme urobiť viacerými spôsobmi:
+
+* z príkazového riadku pomocou príkazu `pytest`:
+
+  ```bash
+  $ pytest test_bankaccount.py
+  ```
+
+* v prostredí _PyCharm_ môžeme vytvoriť spúšťač testu (aj napriek tomu, že sa pri ňom možno automagicky objaví tlačidlo na spustenie testu)
+  * `Run` > `Edit Configurations...`
+  * `+` (`Add New Configuration`) > `Python tests` > `pytest`
+  * ako `Target` môžeme vybrať
+    * `Module name` - `test_bankaccount`
+    * `Script Path` - cesta k modulu
+
+* v prostredí _VS Code_ v rozšírení `Test Explorer` určíme:
+  * o aké testy sa jedná - `pytest`
+  * priečinok, kde sa testy nachádzajú
 
 Po spustení testu tento samozrejme zlyhá, nakoľko trieda `BankAccount` ako ani jej metóda `get_balance()` zatiaľ neexistujú. To je však úplne v poriadku, nakoľko sme stále vo fáze Red a vytvorili sme test, ktorý zlyhá. V nasledujúcej úlohe sa pokúsime test sprevádzkovať.
 
@@ -219,7 +247,7 @@ def test_when_negative_number_is_given_ValueError_is_thrown():
 ```
 
 
-Ak teraz spustíme test, samozrejme zlyhá, keďže metóda deposit() žiadnu výnimku nevyvolá:
+Ak teraz spustíme test, samozrejme zlyhá, keďže metóda `deposit()` žiadnu výnimku nevyvolá:
 
 ```
 F
@@ -523,6 +551,43 @@ python_files = ["test_*.py"]
 
 
 ## Daily Cheatsheet
+
+
+### Testovanie výnimiek
+
+```python
+def test_when_zero_is_given_then_raise_zerodivisionerror():
+    # arrange
+    value = 0
+
+    # act
+    with pytest.raises(ZeroDivisionError):
+        10 / value
+```
+
+
+### Parametrický test
+
+```python
+@pytest.mark.parametrize("word", ['hello', 'World', '123', ''])
+def test_when_not_uppercase_word_is_given_then_false(word):
+    assert word.isupper() == False
+```
+
+
+### Vytvorenie fixture
+
+```python
+@pytest.fixture
+def webdriver():
+   # setup part
+   driver = webdriver.Chrome()
+
+   yield driver
+
+   # teardown part
+   driver.close()
+```
 
 
 ## Resources

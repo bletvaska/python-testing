@@ -16,7 +16,7 @@ class BankAccount(BaseModel):
         self.balance += amount
 
     def withdraw(self, amount: int):
-        if self.balance - amount >= 0:
+        if self.balance - amount <= 0:
             raise ValueError('Not enough money.')
 
         self.balance -= amount
