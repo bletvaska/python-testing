@@ -5,13 +5,13 @@
 
 Vytvorte v trieda `BankAccount` metodu `.withdraw(self, amount)`, pomocou ktorej vyberiete peniaze z uctu. Jej implementácia musi prejst nasledovnymi testami:
 
-* ak vyberieme z uctu 100 evry, tak sa zostatok znizi o 100 evry
-* ak zadame zapornu sumu, tak sa vyvolá výnimka ValueError
-* ak zadame iny typ ako celé číslo, tak sa vyvolá výnimka TypeError
-* ak sa pokusime o vyber vacsieho mnozstva penazi, ako je zostatok, tak sa vyvolá výnimka ValueError
-* ak vyberieme rovnakú sumu, ako je zostatok na ucte, tak vysledny zostatok bude 0
-* ak zadame 0, tak sa vyvolá výnimka ValueError
-* ak zadame None, tak sa vyvolá výnimka TypeError
+* **ak** vyberieme z uctu 100 evry, **tak** sa zostatok znizi o `100` evry
+* **ak** zadame zapornu sumu, **tak** sa vyvolá výnimka `ValueError`
+* **ak** zadame iny typ ako celé číslo, **tak** sa vyvolá výnimka `TypeError`
+* **ak** sa pokusime o vyber vacsieho mnozstva penazi, ako je zostatok, **tak** sa vyvolá výnimka `ValueError`
+* **ak** vyberieme rovnakú sumu, ako je zostatok na ucte, **tak** vysledny zostatok bude `0`
+* **ak** zadame `0`, **tak** sa vyvolá výnimka `ValueError`
+* **ak** zadame `None`, **tak** sa vyvolá výnimka `TypeError`
 
 
 ## Organizacia Testov
@@ -227,44 +227,56 @@ Upravte scope pre fixture tak, aby sa prehliadač otvoril pre všetky testy len 
 
 ```python
 @pytest.fixture(scope='module')
-Testing of Login Form
-import unittest
+```
+
+
+## Testing of Login Form
+
+Otestujte prihlasovaci formular na adrese [https://www.dsl.sk/user.php?action=login](https://www.dsl.sk/user.php?action=login) Prihlasovacie meno a heslo pre otestovanie uspesneho prihlasenia je `pytester:pytester`. **Prosim nemenit!**
+
+zistit aktualnu stranku je mozne pomocou: `driver.current_url`
+
+* **ak** zadam spravny login a spravne heslo **tak** ma presmeruje na stranku [https://www.dsl.sk/](https://www.dsl.sk/).
+* **ak** zadam nespravny login a nespravne heslo **tak** zostanem na rovnakej stranke.
+* **ak** zadam login ale nespravne heslo, **tak** zostanem na rovnakej stranke.
+* **ak** zadam spravny login ale nespravne heslo, **tak** zostanem na rovnakej stranke.
+* **ak** zadam login ale nezadam heslo, **tak** zostanem na rovnakej stranke.
+* **ak** odoslem prazdny formular, **tak** sa dostanem na rovnakej stranke.
+
+
+### Riešenie
+
+```python
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+import pytest
 
 
-class AzetSkTestCase(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.driver = webdriver.Chrome()
-        cls.driver.get('http://www.azet.sk')
+@pytest.fixture(scope="module")
+def driver_azet():
+    driver = webdriver.Chrome()
+    yield driver
+    driver.quit()
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
 
-    def test_if_password_input_field_exists(self):
-        self.driver.find_element_by_name('form[password]')
+def test_when_correct_name_password_sent_then_succesfully_logged(driver_azet):
+    username = driver_azet.find_element(By.XPATH, "/html/body/div/div[3]/div[3]/form/div[1]/div/input")
+    username.send_keys("pytester")
+    password = driver_azet.find_element(By.XPATH, "/html/body/div/div[3]/div[3]/form/div[2]/div/input")
+    password.send_keys("pytester")
+    driver_azet.find_element(By.NAME, "submit").click()
+    driver_azet.find_element(By.NAME, "Neskôr").click()
 
-    def test_if_login_input_field_exists(self):
-        self.driver.find_element_by_name('form[username]')
 
-    def test_if_the_input_field_login_is_writable(self):
-        self.driver.find_element_by_name('form[username]').send_keys('username')
+    # arrange / act
+    driver_azet.get("https://prihlasenie.azet.sk/")
 
-    def test_if_the_input_field_password_is_writable(self):
-        self.driver.find_element_by_name('form[password]').send_keys('password')
 
-    def test_if_there_are_asterisks_in_password_field(self):
-        pass
+    # assert
+    assert "Azet" in driver_azet.find_element(By.XPATH, '//*[@id="app"]/header/nav/div/div[2]/div/span')
 
-    def test_if_correct_page_after_successfull_login(self):
-        pass
 
-    def test_if_login_page_remains_after_wrong_credentials_have_been_provided(self):
-        pass
-
-    def test_if_it_is_possible_to_submit_empty_form(self):
-        pass
+    #driver_azet.find_element(By.PARTIAL_LINK_TEXT, "Odhlásiť").click()
 ```
 
 
@@ -419,13 +431,13 @@ elem.send_keys('pycon', Keys.RETURN)
 
 ## TODO
 
-* pytest-webdriver
+* [pytest-webdriver](https://pypi.org/project/pytest-webdriver/)
 
 
 ## References
 
-* Selenium with Python
-* http://naucse.python.cz/lessons/intro/testing/
-* Selenium WebDriver
-* Selenium Easy - stránky, kde sa dá testovať Selenium
+* [Selenium with Python](http://selenium-python.readthedocs.io)
+* [http://naucse.python.cz/lessons/intro/testing/](http://naucse.python.cz/lessons/intro/testing/)
+* [Selenium WebDriver](https://www.seleniumhq.org/docs/03_webdriver.jsp)
+* [Selenium Easy](https://www.seleniumeasy.com/test/basic-radiobutton-demo.html) - stránky, kde sa dá testovať Selenium
 
