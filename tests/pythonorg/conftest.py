@@ -4,7 +4,9 @@ from selenium import webdriver
 
 @pytest.fixture(scope='module')
 def browser():
-    driver = webdriver.Firefox()
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    driver = webdriver.Chrome(options=options)
 
     yield driver
 
