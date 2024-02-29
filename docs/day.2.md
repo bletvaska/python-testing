@@ -16,11 +16,13 @@ Vytvorte v trieda `BankAccount` metodu `.withdraw(self, amount)`, pomocou ktorej
 
 ## Organizacia Testov
 
-**Test suites** - subor/sada testov, ktore spolu suvisia, napr.:
+Zatiaľ sme v rámci orgranizácie kódu len oddelili kód aplikácie od testov. Samotné súbory s testami však budú postupom času rásť, pretože pre otestovanie jednej vlastnosti môžeme vytvoriť mnoho malých jednotkových testov. Keď následne testy všetkých vlastností uložíme do jedného modulu, môže sa jednať o modul so stovkami drobných jednotkových testov. Navigácia v takom module môže byť veľmi komplikovaná.
 
-* testuju jednu metódu/funkciu
-* testuju jednu triedu
-* testuju jeden formular
+Aby sme sa v týchto testoch nestratili, budeme ich trhať do menších modulov, ktoré budeme nazývať **sady testov** (z angl. **test suites**). Do takejto sady budeme ukladať testy, ktoré spolu súvisia, napr.:
+
+* testujú jednu metódu/funkciu
+* testujú jednu triedu
+* testujú jeden formular
 * ...
 
 v triede `BankAccount` sa nachádzajú dve metody, takze mozeme vytvorit minimalne dva test suity. okrem toho mozeme urobit samostatny suite pre testovanie spravania samotneho uctu, ako napr. zostatok po vytvoreni alebo povinnost zadania vlastnika uctu.
