@@ -16,6 +16,12 @@ class BankAccount(BaseModel):
         self.balance += amount
 
     def withdraw(self, amount: int):
+        if type(amount) is not int:
+            raise TypeError('Amount is not an integer.')
+        if amount == 0:
+            raise ValueError("Amount cannot be 0.")
+        if amount < 0:
+            raise ValueError('Amount cannot be negative.')
         if self.balance - amount <= 0:
             raise ValueError('Not enough money.')
 
