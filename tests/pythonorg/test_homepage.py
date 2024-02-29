@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 
 @pytest.fixture
 def browser():
-    driver = webdriver.Chrome()
+    driver = webdriver.Firefox()
     driver.get('https://www.python.org')
 
     yield driver
