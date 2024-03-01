@@ -77,18 +77,18 @@ Fixture s názvom `account` nie je potrebné ani explicitne importovať.
 
 ## Inštalácia
 
-Do svojho prostredia je potrebné nainštalovať balík s názvom `selenium`.
+Do svojho prostredia je potrebné nainštalovať balík s názvom `pytest-selenium`.
 
 Ak používate nástroj `pip`, stačí jednoducho napísať z príkazového riadku:
 
 ```bash
-$ pip install selenium
+$ pip install pytest-selenium
 ```
 
 Ak používate nástroj `poetry`, tak balík pridáte do zoznamu balíkov príkazom:
 
 ```bash
-$ poetry add selenium
+$ poetry add pytest-selenium
 ```
 
 V prostredí _PyCharm_ zasa balíček nainštalujete v nastaveniach používaného interpretera jazyka Python.
@@ -119,99 +119,148 @@ driver.close()
 
 ## Creating Tests with pytest
 
-Z predchádzajúcej ukážky si vytvoríme niekoľko testov.
+Otestujeme jednoduchý prihlasovací formulár, ktorý je dostupný na adrese [Welcome to the-internet](http://the-internet.herokuapp.com/) pod názvom [Form Authentication](http://the-internet.herokuapp.com/login).
 
-Vytvorte súbor `test_pythonorg.py`, ktorý bude obsahovať jednotlivé testy.
+Keďže tentokrát budeme rovno vytvárať testy, nebudeme priamo používať modul `selenium`, ale použijeme rozšírenie určené priamo pre `pytest` s názvom `pytest-selenium`. To nám priamo poskytuje fixture s názvom `selenium`, ktoré vieme okamžite použiť.
+
+Pre potreby testu vytvorte balík `heroku` a v ňom vytvorte modul `test_login_form.py`, ktorý bude obsahovať jednotlivé testy.
+
+Pokúste sa vytvoriť čo najviac z nasledovných testov:
+
+* **ak** odoslem prazdny formular, **tak** sa dostanem na rovnakej stranke.
+* **ak** zadam spravny login a spravne heslo **tak** ma presmeruje na stranku [http://the-internet.herokuapp.com/secure](http://the-internet.herokuapp.com/secure).
+* **ak** zadam nespravny login a nespravne heslo **tak** zostanem na rovnakej stranke.
+* **ak** zadam login ale nespravne heslo, **tak** zostanem na rovnakej stranke.
+* **ak** zadam spravny login ale nespravne heslo, **tak** zostanem na rovnakej stranke.
+* **ak** zadam login ale nezadam heslo, **tak** zostanem na rovnakej stranke.
+
+### Test: Ak odoslem prazdny formular, tak sa zobrazí chybová hláška.
 
 ```python
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
+def test_when_empty_form_is_submitted_then_error_message_is_displayed(selenium):
+    selenium.get('http://the-internet.herokuapp.com/login')
+    selenium.find_element(By.TAG_NAME, 'button').click()
+    element = selenium.find_element(By.ID, 'flash')
+    assert 'Your username is invalid!' in element.text
+```
+
+### Test: Ak zadam login ale nezadam heslo, tak zostanem na rovnakej stranke.
+
+```python
+def test_when_only_login_is_submitted_then_error_message_is_displayed(selenium):
+    selenium.get('http://the-internet.herokuapp.com/login')
+    selenium.find_element(By.ID, 'username').send_keys('admin')
+    selenium.find_element(By.TAG_NAME, 'button').click()
+    element = selenium.find_element(By.ID, 'flash')
+    assert 'Your username is invalid!' in element.text
+```
+
+### Test: Ak zadam spravny login a spravne heslo, tak ma presmeruje na stranku [http://the-internet.herokuapp.com/secure](http://the-internet.herokuapp.com/secure).
+
+```python
+def test_when_correct_credentials_are_provided_then_redirected_to_secure_page(selenium):
+    selenium.get('http://the-internet.herokuapp.com/login')
+    selenium.find_element(By.ID, 'username').send_keys('tomsmith')
+    selenium.find_element(By.ID, 'password').send_keys('SuperSecretPassword!')
+    selenium.find_element(By.TAG_NAME, 'button').click()
+    element = selenium.find_element(By.ID, 'flash')
+    assert selenium.current_url == 'http://the-internet.herokuapp.com/secure'
 ```
 
 
-Vytvorte test, pomocou ktorého overíte, či sa v názve stránky [www.python.org](https://www.python.org) nachádza slovo Python
+## Generovanie náhodných používateľských mien
 
-```python
-def test_when_enter_page_check_title_contains_python():
-    driver = webdriver.Chrome()
-    driver.get("http://www.python.org")
-    assert 'Python' in driver.title
-    driver.close()
+Keď sa spustí test, v ktorom odošleme len používateľské meno, vždy odošleme rovnaké používateľské meno. To znamená, že našu aplikáciu máme otestovanú len vzhľadom na uvedené používateľské meno.
+
+Bolo by užitočnejšie testovať aj iné používateľské mená. Za tým účelom môžeme s výhodou použiť modul s názvom `faker`, ktorý je určený na generovanie náhodných sémantických dát.
+
+
+### Inštalácia
+
+Modul najprv nainštalujeme:
+
+```bash
+# s nástrojom pip
+$ pip install faker
+
+# s nástrojom poetry
+$ poetry add faker
 ```
 
 
-Vytvorte test, ktorý overí, či sa na stránke nachádza vyhľadávací panel.
+### Príklad použitia
+
+A môžeme ho vyskúšať jednoducho takto:
 
 ```python
-def test_when_on_homepage_then_searchbar_is_present(homepage):
-    driver = webdriver.Chrome()
-    driver.get("http://www.python.org")
-    homepage.find_element(By.ID, 'id-search-field')
-    driver.close()
-```
+from faker import Faker
 
-Overte, či po zadaní kľúčového výrazu `pycon` do vyhľadávača na tejto stránke, sa na stránke zobrazí element `<h3>` s textom `Results`
-
-```python
-def test_when_search_string_entered_then_results_must_be_on_page():
-    driver = webdriver.Chrome()
-    driver.get("http://www.python.org")
-    element = driver.find_element(By.NAME, 'q')
-    element.send_keys('selenium')
-    element.submit()
-
-    results = driver.find_element(By.XPATH,
-        '//*[@id="content"]/div/section/form/h3')
-    assert results.text == 'Results'
-    driver.close()
+faker = Faker()
+faker.user_name()
 ```
 
 
-## Creating Fixtures
+### Fixture `faker`
 
-Pre vytvorený testcase vytvorte potrebné fixtures a podľa potreby upravte aj zvyšný kód.
+Pre použitie v našich testoch bude výhodné vytvoriť fixture. Tým pádom ho budeme vedieť použiť kdekoľvek.
 
 ```python
 @pytest.fixture
-def driver():
-   driver = webdriver.Chrome()
-   driver.get('https://www.python.org')
-   yield driver
-   driver.close()
-
-def test_when_enter_page_check_title_contains_python(driver):
-   assert 'Python' in driver.title
-
-def test_when_search_string_entered_then_results_must_be_on_page(driver):
-   element = driver.find_element(By.NAME, 'q')
-   element.send_keys('pycon sk 2019')
-   element.submit()
-
-   results = driver.find_element(By.XPATH,
-       '//*[@id="content"]/div/section/form/h3')
-   assert results.text == 'Results'
+def faker():
+  yield Faker()
 ```
 
-Odoslanie formuláru môže byť samozrejme niekoľkými spôsobmi:
 
-* pomocou nového riadka na konci vstupu:
+### Aktualizácia testu
 
-  ```python
-  element.send_keys('pycon sk 2019\n')
-  ```
+Nakoniec už len aktualizujeme test, v ktorom posielame len používateľské meno:
 
-* pomocou explicitne zadanej klávesy po celom vstupe:
+```python
+def test_when_only_login_is_submitted_then_error_message_is_displayed(selenium, faker):
+    selenium.get('http://the-internet.herokuapp.com/login')
+    selenium.find_element(By.ID, 'username').send_keys(faker.user_name())
+    selenium.find_element(By.TAG_NAME, 'button').click()
+    element = selenium.find_element(By.ID, 'flash')
+    assert 'Your username is invalid!' in element.text
+```
 
-  ```python
-  element.send_keys('pycon sk 2019', Keys.RETURN)
-  ```
 
-* pomocou kliknutia na tlačidlo vedľa vyhľadávacieho poľa:
+## Opakovanie jednotkového testu
 
-  ```python
-  driver.find_element(By.ID, 'submit').click()
-  ```
+Pri generovaní náhodných vstupov môžeme zabezpečiť viacnásobné testovanie. Napríklad test, kde testujeme len odoslanie používateľského mena, môžeme nechať vykonať _10_ krát s desiatimi rozličnými používateľkými menami.
+
+To môžeme docieliť pomocou rozšírenia `pytest-repeat`, ktoré nám postne dekorátor `@pytest.mark.repeat()`. Ak teda chceme uvedený test zopakovať _10x_, zadekorujeme ho takto:
+
+```python
+@pytest.mark.repeat(10)
+def test_when_only_login_is_submitted_then_error_message_is_displayed(selenium, faker):
+```
+
+
+## Base URL
+
+V každom jednom teste používame rovnakú URL adresu, kde sa nachádza naša stránka. Ak však takýchto testov spravíme stovky a dôjde k zmene tejto adresy, budeme ju musieť všade prepísať ručne.
+
+Aby sme sa tejto činnosti vyhli, môžeme na tento účel využiť rozšírenie `pytest-base-url`. Pomocou neho budeme môcť `base-url` použiť ako parameter. Obecne totiž sa cesta v aplikácii bude meniť menej časťo, ako práve jej umiestnenie. O to viac, ak testovať budeme v rozličných prostrediach, ako napr. `devel`, `test` / `qa` alebo `prod`.
+
+Base URL adresu našej aplikácie môžeme nastaviť primo v konfigurácii pytest-u v súbore `pyproject.toml`. Nastaviť ju môžeme nasledovne:
+
+```ini
+base_url = 'http://the-internet.herokuapp.com'
+```
+
+
+Zmeniť hodnotu `base_url` je možné aj pri spúšťaní testov pomocou voľby `--base-url` takto:
+
+```bash
+$ pytest --base-url http://nova.url.adresa
+```
+
+**Upozornenie:** Ak však teraz testy spustíme, tak všetky budú preskočené. Bola totiž aplikovaná ochrana na [citlivé prostredia](https://pytest-selenium.readthedocs.io/en/latest/user_guide.html#sensitive-environments). Predvolene sú totiž všetky testy považované za deštruktívne. Ochranu vypneme tak, že všetkým testom v module nastavíme marker `@pytest.mark.nondestructive`.
+
+
+## Page Object Model
+
 
 ## Rýchlosť vykonávaných testov
 
@@ -227,6 +276,9 @@ Upravte scope pre fixture tak, aby sa prehliadač otvoril pre všetky testy len 
 @pytest.fixture(scope='module')
 ```
 
+
+
+## Tips and Tricks
 
 ## Fixture so závislosťou na inom fixture
 
@@ -250,9 +302,6 @@ def homepage(browser):
 ```
 
 Fixture `browser()` môže byť uložený v súbore `conftest.py` a fixture `homepage()` môže byť uložený v príslušnom module.
-
-
-## Tips and Tricks
 
 ### Webdriver v Headless režime
 

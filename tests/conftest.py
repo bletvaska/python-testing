@@ -1,4 +1,5 @@
 import pytest
+from faker import Faker
 from selenium import webdriver
 
 
@@ -15,3 +16,8 @@ def browser():
     yield driver
 
     driver.close()
+
+
+@pytest.fixture(scope='session')
+def faker():
+    yield Faker()

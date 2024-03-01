@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Movie schema",
+  "description": "Validation of movie entry",
+  "type": "object",
+  "properties": {
+    "objectId": {
+      "type": "string"
+    },
+    "year": {
+      "type": "integer",
+      "minimum": 2000
+    },
+    "title": {
+      "type": "string"
+    },
+    "genres": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Sci-Fi",
+          "Adventure",
+          "Drama",
+          "Action"
+        ]
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{1,3}Z$"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "objectId",
+    "title",
+    "year",
+    "genres",
+    "createdAt",
+    "updatedAt"
+  ]
+}

@@ -8,6 +8,10 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 pydantic = "^2.6.3"
+faker = "^23.3.0"
+pytest-xdist = "^3.5.0"
+jsonschema = "^4.21.1"
+pytest-repeat = "^0.9.3"
 
 
 
@@ -42,5 +46,8 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 markers = [
     "wip: Work in progress",
+    "heroku",
+    "login_form"
 ]
+base_url = "http://the-internet.herokuapp.com"
 

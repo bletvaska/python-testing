@@ -34,7 +34,6 @@ def test_when_invalid_type_of_amount_withdrawed_then_type_error_should_be_raised
         account.withdraw(amount)
 
 
-@pytest.mark.wip
 def test_when_0_amount_is_withdraw_then_valueerror_should_be_raised(account):
     account.deposit(100)
     with pytest.raises(ValueError):
