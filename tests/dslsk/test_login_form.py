@@ -8,7 +8,6 @@ pytestmark = [
 ]
 
 
-@pytest.mark.wip
 def test_when_correct_credentials_are_provided_then_redirected_to_secure_page(selenium, base_url):
     selenium.get(f'{base_url}/login')
     selenium.find_element(By.ID, 'username').send_keys('tomsmith')

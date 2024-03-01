@@ -8,10 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 pydantic = "^2.6.3"
-faker = "^23.3.0"
-pytest-xdist = "^3.5.0"
-jsonschema = "^4.21.1"
-pytest-repeat = "^0.9.3"
+
 
 
 
@@ -26,6 +23,10 @@ requests = "^2.31.0"
 pytest-selenium = "^4.1.0"
 httpie = "^3.2.2"
 toml = "^0.10.2"
+faker = "^23.3.0"
+jsonschema = "^4.21.1"
+pytest-repeat = "^0.9.3"
+selenium-page-factory = "^2.6"
 
 [build-system]
 requires = ["poetry-core"]

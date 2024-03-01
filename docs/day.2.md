@@ -261,6 +261,102 @@ $ pytest --base-url http://nova.url.adresa
 
 ## Page Object Model
 
+Webové stránky sú však výrazne komplexnejšie, ako tie, s ktorými sme sa hrali. Rovnako tak aj ich samotné použitie a testovanie. Vytvorenie jedného testu už môže predstovať konkrétny prípad použitia (use-case), ako napr. tento na prihlásenie:
+
+| No | Test Steps | Test Data | Expected Result | Actual Result |
+| ----------- | ----------- | ----------- | ----------- | ---- |
+| 1 |	Navigate to the form login page | | Can navigate to the page | |
+| 2 | Enter login username | `username=username` | Form can be found | |
+| 3 | Enter login password | `password=password` | Username can be submitted | |
+| 4 | Click Submit login button | | Button can be clicked | |
+| 5 | Check whether login is successfull | | Login is successful | |
+| 6 | Click logout button | | Button can be clicked | |
+| 7 | Check whether logout is successful | | Logout Successful | |
+
+Ak by sme postupovali tak, ako doteraz, tak jednotlivé testy budú časom neudržateľné a značne neprehľadné. Miesto toho si môžeme pomôcť vytvoriť triedy, ktoré budú reprezentovať dané stránky a rovnako tak operácie v nich. Tento prístup nám znižuje duplikovanie kódu, pretože všetko sa nachádza na jednom mieste.
+
+Tento prístup sa nazýva **Page Object Model**. Jedná sa o návrhový vzor, ktorého [definícia](https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/) môže znieť takto:
+
+> A page object is an object-oriented class that serves as an interface to a page of your AUT.
+
+Testy následne pre interakciu so stránkou používajú metódy danej triedy.
+
+Výhodou tohto prístupu je, že ak sa zmení UI stránky, samotné testy sa nemusia meniť. Jediné, čo sa zmení, je kód v rámci triedy, ktorá reprezentuje danú stránku (Page Object). Rovnako tak všetky zmeny, ktoré sa týkajú nového UI, sa nachádzajú na jednom mieste.
+
+Výhody:
+
+* There is a clean separation between the test code and page-specific code, such as locators (or their use if you’re using a UI Map) and layout.
+* There is a single repository for the services or operations the page offers rather than having these services scattered throughout the tests.
+
+
+### Page Factory
+
+**Page Factory** je spôsob, ako implementovať _Page Model Object_.
+
+Nainštalujeme balík `selenium-page-factory`:
+
+```bash
+# pomocou pip
+$ pip install selenium-page-factory
+
+# pomocou poetry
+$ poetry add selenium-page-factory
+```
+
+
+
+### Page Object Model pre prihlasovaciu stránku
+
+_Page Object Model_ pre prihlasovaciu stránku bude vyzerať nasledovne:
+
+```python
+from seleniumpagefactory import PageFactory
+
+class LoginPage(PageFactory):
+    locators = {
+        'username': ('ID', 'username'),
+        'password': ('ID', 'password'),
+        'button': ('TAG', 'button'),
+        'flash': ('ID', 'flash'),
+    }
+
+    def __init__(self, driver):
+        self.driver = driver
+
+    def login(self, username='', password=''):
+        self.username.set_text(username)
+        self.password.set_text(password)
+        self.button.click()
+```
+
+
+### Vytvorenie testu pre overenie prihlásenia
+
+Test pre overenie správania v prípade poskytnutia nesprávneho používateľského mena a hesla bude vyzerať takto:
+
+```python
+@pytest.mark.nondestructive
+@pytest.mark.repeat(10)
+def test_when_invalid_credentials_are_provided_then_error_message_appears(selenium, base_url, faker):
+    selenium.get(f'{base_url}/login')
+    page = LoginPage(selenium)
+    page.login(faker.user_name(), faker.password())
+
+    assert 'Your username is invalid!' in page.flash.get_text()
+```
+
+A test pre overenie správania v prípade poskytnutia správnych prihlasovacích údajov, bude vyzerať takto:
+
+```python
+@pytest.mark.nondestructive
+def test_if_correct_credentials_are_provided_then_success_message_appears(selenium, base_url, variables):
+    selenium.get(f'{base_url}/login')
+    page = LoginPage(selenium)
+    page.login(variables['heroku']['username'], variables['heroku']['password'])
+
+    assert 'You logged into a secure area!' in page.flash.get_text()
+```
+
 
 ## Rýchlosť vykonávaných testov
 

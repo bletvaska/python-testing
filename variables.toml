@@ -1,3 +1,7 @@
 [dsl]
 username = "pytester"
 password = "pytester"
+
+[heroku]
+username = "tomsmith"
+password = "SuperSecretPassword!"
