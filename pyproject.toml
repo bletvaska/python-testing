@@ -29,4 +29,7 @@ addopts = [
 ]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+markers = [
+    "wip: Work in progress"
+]
 

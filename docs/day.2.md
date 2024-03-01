@@ -52,7 +52,16 @@ následne už len pripraviť jednotlive moduly a naplníme ich testami pre jedno
   * specific content in sub folders
   * content override
 
-V našom prípade môžeme vytvoriť súbor conftest.py v priečinku tests/bankaccount/, kde umiestnime všetky fixtures potrebné pre prácu s bankovým účtom.
+V našom prípade môžeme vytvoriť súbor `conftest.py` v priečinku `tests/bankaccount/`, kde umiestnime všetky fixtures potrebné pre prácu s bankovým účtom.
+
+Pre následné použitie týchto fixtures netreba vytvoriť nič špeciálne - stačí ich len použiť:
+
+```python
+def test_when_account_is_created_then_balance_is_0(account):
+  assert account.balance == 0
+```
+
+Fixture s názvom `account` nie je potrebné ani explicitne importovať.
 
 
 # Selenium Webdriver Architecture
@@ -66,17 +75,9 @@ V našom prípade môžeme vytvoriť súbor conftest.py v priečinku tests/banka
 ```
 
 
-## Installation
+## Inštalácia
 
-Nainstalovat budeme potrebovať dve veci:
-
-  1. balík `selenium`
-  2. selenium webdriver
-
-
-### Installing Selenium Package
-
-Nainštalujte si do svojho prostredia balíček `selenium`
+Do svojho prostredia je potrebné nainštalovať balík s názvom `selenium`.
 
 Ak používate nástroj `pip`, stačí jednoducho napísať z príkazového riadku:
 
@@ -84,38 +85,15 @@ Ak používate nástroj `pip`, stačí jednoducho napísať z príkazového riad
 $ pip install selenium
 ```
 
+Ak používate nástroj `poetry`, tak balík pridáte do zoznamu balíkov príkazom:
+
+```bash
+$ poetry add selenium
+```
+
 V prostredí _PyCharm_ zasa balíček nainštalujete v nastaveniach používaného interpretera jazyka Python.
 
-
-### Installing Webdriver
-
-Nainštalujte si príslušný _WebDriver_ pre váš prehliadač.
-
-
-Ak používate linuxovú distribúciu Fedora, môžete priamo z príkazového riadku nainštalovať balíček `chromedriver`. Tento obsahuje WebDriver pre prehliadač Chrome:
-
-```bash
-$ sudo dnf install chromedriver
-```
-
-
-Ak používate linuxovú distribúciu _Ubuntu_, z príkazového riadku nainštalujte balík `chromium-webdriver` príkazom:
-
-```bash
-$ sudo apt install chromium-webdriver
-```
-
-Ak používate _OS Windows_ a máte nainštalovaný balíčkovací systím _Chocolatey_, _WebDriver_ pre prehliadač _Chromium_ si môžete doinštalovať príkazom:
-
-```bash
-$ choco install chromedriver
-```
-
-
-_WebDriver_ pre ostatné systémy môžete stiahnuť a nainštalovať podľa pokynov na domovskej stránke [http://www.seleniumhq.org/download/](http://www.seleniumhq.org/download/)
-
-
-**Poznámka:** Ak používate _OS Windows_, váš stiahnutý webdriver si rozbaľte do priečinku, v ktorom sa nachádza interpreter jazyka Python (súbor python.exe). Vyhnete sa tak situácii, kedy budete musieť pri každej inštancii uvádzať absolútnu cestu k nemu.
+**Poznámka:** Ak používate `selenium` v staršej verzii ako `4.10`, okrem balíka `selenium` potrebujete nainštalovať aj webdriver pre príslušný prehliadač. Toto však od verzie `4.10` nie je nutné, nakoľko si ho `selenium` nainštaluje samo. Tým sa vyhneme aj prípadným problémom pri spúšťaní príslušného webdrivera, ak systém nevie nájsť jeho spustiteľnú binárku priamo v ceste.
 
 
 ## The Basics
@@ -132,7 +110,7 @@ assert 'Python' in driver.title
 
 element = driver.find_element(By.NAME, 'q')
 element.clear()
-element.send_keys('pycon sk 2022')
+element.send_keys('pycon sk 2024')
 element.submit()
 
 driver.close()
@@ -156,12 +134,22 @@ Vytvorte test, pomocou ktorého overíte, či sa v názve stránky [www.python.o
 
 ```python
 def test_when_enter_page_check_title_contains_python():
-   driver = webdriver.Chrome()
-   driver.get("http://www.python.org")
-   assert 'Python' in driver.title
-   driver.close()
+    driver = webdriver.Chrome()
+    driver.get("http://www.python.org")
+    assert 'Python' in driver.title
+    driver.close()
 ```
 
+
+Vytvorte test, ktorý overí, či sa na stránke nachádza vyhľadávací panel.
+
+```python
+def test_when_on_homepage_then_searchbar_is_present(homepage):
+    driver = webdriver.Chrome()
+    driver.get("http://www.python.org")
+    homepage.find_element(By.ID, 'id-search-field')
+    driver.close()
+```
 
 Overte, či po zadaní kľúčového výrazu `pycon` do vyhľadávača na tejto stránke, sa na stránke zobrazí element `<h3>` s textom `Results`
 
@@ -171,7 +159,7 @@ def test_when_search_string_entered_then_results_must_be_on_page():
     driver.get("http://www.python.org")
     element = driver.find_element(By.NAME, 'q')
     element.send_keys('selenium')
-    element.submit() 
+    element.submit()
 
     results = driver.find_element(By.XPATH,
         '//*[@id="content"]/div/section/form/h3')
@@ -225,11 +213,43 @@ Odoslanie formuláru môže byť samozrejme niekoľkými spôsobmi:
   driver.find_element(By.ID, 'submit').click()
   ```
 
+## Rýchlosť vykonávaných testov
+
+* trvá to dlho
+* najdlhšie trvá spustenie prehliadača
+* cieľ - spustiť prehliadač iba raz na začiatku testovania a na jeho konci ho zatvoriť
+* docielime to pomocou vhodných fixtures
+* predvolene je scope pre fixture nastavený ako `function` - vykoná sa pre kažú jednu funkciu. pre nás bude výhodnejšie použiť scope `module` - pri otvorení modulu a teda sady testov.
+
 Upravte scope pre fixture tak, aby sa prehliadač otvoril pre všetky testy len raz.
 
 ```python
 @pytest.fixture(scope='module')
 ```
+
+
+## Fixture so závislosťou na inom fixture
+
+Aktuálny fixture s názvom `driver()` nie je veľmi univerzálny, pretože spustí prehliadač priamo s konrétnou stránkou. Ak by sme ale chceli testovať viacero stránok, museli by sme pre kažú jednu vytvoriť samostatný fixture.
+
+Miesto toho môžeme pripraviť obecný fixture s názvom `browser()`, ktorý otvorí len prehliadač a následne ďalší fixture s názvom `homepage()`, ktorého parametrom bude ten obecný, ktorý len otvorí príslušnú (domovskú) stránku.
+
+Tieto dve fixtures môžu vyzerať takto:
+
+```python
+@pytest.fixture(scope='session')
+def browser():
+    driver = webdriver.Chrome()
+    yield driver
+    driver.close()
+
+@pytest.fixture()
+def homepage(browser):
+    browser.get('https://www.python.org')
+    yield browser
+```
+
+Fixture `browser()` môže byť uložený v súbore `conftest.py` a fixture `homepage()` môže byť uložený v príslušnom module.
 
 
 ## Testing of Login Form
@@ -284,15 +304,6 @@ def test_when_correct_name_password_sent_then_succesfully_logged(driver_azet):
 
 ## Tips and Tricks
 
-### Problém s nájdením Webdriver-a
-
-Ak chromedriver nespustíte priamo z príkazového riadku, musíte pri vytváraní objektu driver-a k nemu uviesť absolútnu cestu. Tento prístup použijete vtedy, ak ste používateľom distribúcie Ubuntu:
-
-```python
-driver = webdriver.Chrome(executable_path='/path/to/webdriver')
-```
-
-
 ### Webdriver v Headless režime
 
 Prehliadač Chrome je možné spustiť v tzv. headless režime, kedy sa nebude spúšťať s grafickým rozhraním, ale spustí sa len v pamäti. To je veľmi výhodné v prípadoch, ak chcete testy spúšťať na pozadí bez nutnosti mať spustené grafické prostredie.
@@ -302,6 +313,32 @@ options = webdriver.ChromeOptions()
 options.add_argument('headless')
 driver = webdriver.Chrome(options=options)
 ```
+
+V headless režime je možné spustiť aj prehliadač Firefox. V jeho prípade bude spustenie driver-a vyzerať nasledovne:
+
+```python
+options = webdriver.FirefoxOptions()
+options.add_argument('--headless')
+driver = webdriver.Firefox(options=options)
+```
+
+
+
+
+## Označovanie skupiny testov
+
+Zatiaľ sme dokázali označkovať len samostatný test. Označkovať však vieme aj sadu testov. To vieme urobiť priamo v module pridaním globálnej premennej `pytestmark` napríklad v module `test_withdraw.py` takto:
+
+```python
+pytestmark = [
+  pytest.mark.bankaccount,
+  pytest.mark.withdraw
+]
+```
+
+To nám pridáva možnosť spúšťať napríklad všetky testy pre bankový účet pomocou značky `bankaccount`. Ale rovnako tak môžeme spustiť len testy týkajúce sa operácie výberu peňazí z účtu pomocou značky `withdraw`.
+
+Samozrejme netreba zabudnúť tieto značky pridať do konfiguračného súboru `pyproject.toml`.
 
 
 ## Testing Special HTML Elements
@@ -431,11 +468,6 @@ elem.send_keys('pycon', Keys.RETURN)
 ```
 
 
-## TODO
-
-* [pytest-webdriver](https://pypi.org/project/pytest-webdriver/)
-
-
 ## References
 
 * [Selenium with Python](http://selenium-python.readthedocs.io)
@@ -443,3 +475,17 @@ elem.send_keys('pycon', Keys.RETURN)
 * [Selenium WebDriver](https://www.seleniumhq.org/docs/03_webdriver.jsp)
 * [Selenium Easy](https://www.seleniumeasy.com/test/basic-radiobutton-demo.html) - stránky, kde sa dá testovať Selenium
 
+
+## TODO
+
+* [pytest-webdriver](https://pypi.org/project/pytest-webdriver/)
+
+* testovať inú stránku ako [www.python.org](https://www.python.org)
+  * ukázať test niečoho sofistikovanejšieho, ako len vyhľadávať niečo na stránke
+  * niečo, kde bude mať význam ukázať závislosť jednotlivých fixtures
+  * možno ukázať fixture s prihlásením používateľa
+
+* možno používať ako webdriver Firefox
+  * je pomalší :-D
+
+* ako je to s uspávaním a pauzami?

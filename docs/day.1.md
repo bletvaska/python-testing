@@ -8,6 +8,8 @@ V prípade použitia _VS Code_ je potrebné nainštalovať rozšírenie:
 
 * [Python Test Explorer](https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter)
 
+**Upozornenie:** Ak používate _OS Windows_, pre prácu v príkazovom riadku **NEPOUŽÍVAJTE PowerShell!!!** Evidentne má problém s používaním (nie len) systémových premenných. Miesto toho používajte buď štandardný `cmd.exe` alebo ideálne `bash`.
+
 
 ## Na úvod
 
@@ -132,6 +134,12 @@ Test spustíme ručne. To môžeme urobiť viacerými spôsobmi:
 
   ```bash
   $ pytest test_bankaccount.py
+  ```
+
+* z prostredia interaktívneho _Python_-u `ipython` príkazom:
+
+  ```ipython
+  ! pytest test_bankaccount.py
   ```
 
 * v prostredí _PyCharm_ môžeme vytvoriť spúšťač testu (aj napriek tomu, že sa pri ňom možno automagicky objaví tlačidlo na spustenie testu)
@@ -590,6 +598,62 @@ def webdriver():
 ```
 
 
+## Selektívne spúšťanie testov
+
+* s rastúcim počtom nových testov môže byť problém spustiť len tie, ktoré potrebujeme
+  * konkrétnu sadu testov
+  * konkrétny jeden test, ktorý práve vyvíjame
+* môžeme jednotlivé testy označkovať a selektívne ich spúšťať podľa názvu značky
+
+### Označkovanie testu
+
+pomocou dekorátora `@pytest.mark.nazov_znacky`:
+
+```python
+@pytest.mark.wip
+def test_something():
+  pass
+```
+
+
+### Spustenie testu s vybranou značkou
+
+Spustiť len vybrané testy môžeme spustením nástroja `pytest` z príkazového riadku pomocou prepínača `-m`. Ak teda chceme spustiť len tie testy, ktoré sú označené značkou `wip`, spustíme príkaz:
+
+```bash
+$ pytest -m wip
+```
+
+
+### Konfigurácia vlastných značiek
+
+Pri spustení testu, ktorý sme označili vlastnou značkou, však uvidíme upozornenie, že `pytest` nepozná našu značku `wip`:
+
+```
+test_withdraw.py:37: PytestUnknownMarkWarning: Unknown pytest.mark.wip - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.wip
+```
+
+`pytest` totiž obsahuje vlastné značky, ktorých zoznam si vieme vypísať pomocou volania:
+
+```bash
+$ pytest --markers
+```
+
+Ak chceme do tohto zoznamu pridať vlastnú značku, napr. uvedenú značku `wip`, urobíme tak v súbore `pyproject.toml`:
+
+```toml
+[tool.pytest.ini_options]
+markers = [
+    "wip: Work in progress"
+]
+```
+
+Do zoznamu známych značiek sme pridali značku s názvom `wip` spolu s (nepovinným) opisom `Work in progress`.
+
+Od tohto momentu už nebudeme upozorňovaní, že `pytest` túto značku nepozná. Rovnako ju uvidíme v zozname známych značiek.
+
+
 ## Resources
 
 * Nauč se Python: Testování
@@ -601,6 +665,19 @@ def webdriver():
 ## TODO
 
 * pridať test pri vytváraní účtu, ktorý skontroluje, či je IBAN zadaný v správnom formáte (pomocou regulárnych výrazov)
+
+* bankový účet
+  * dajú sa pridávať rozličné úlohy so storkou, že sa "zmenili požiadavky projektu"
+  * napríklad: pridať vlastnosť účtu - minimálny zostatok (`min_balance`), pod ktorú nesmie klesnúť zostatok pri výbere
+
+* `pip` vie inštalovať aj balíky, ktoré sú uložené v súbore `pyproject.toml`
+  * spustiť z príkazového riadku v priečinku, kde je uložený `pyproject.toml`:
+
+    ```bash
+    $ pip install .
+    ```
+
+  * treba lepšie vymyslieť, ako na správu balíčkov v rámci školenia, nakoľko `poetry` stále prináša viac problémov ako úžiťku :-(
 
 
 

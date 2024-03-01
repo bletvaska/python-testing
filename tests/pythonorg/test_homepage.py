@@ -8,6 +8,10 @@ def homepage(browser):
     yield browser
 
 
+def test_failing_test(homepage):
+    assert False, 'This will always fail'
+
+
 def test_when_search_string_entered_then_results_must_show_on_page(homepage):
     # act
     element = homepage.find_element(By.ID, 'id-search-field')
