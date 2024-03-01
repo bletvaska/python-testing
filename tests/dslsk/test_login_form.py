@@ -29,7 +29,6 @@ def test_if_valid_login_and_password_entered_then_user_is_logged_in(selenium, va
     selenium.get('https://www.dsl.sk/user.php?action=logout')
 
 
-@pytest.mark.wip
 def test_when_no_password_entered_then_not_logged_in(selenium, variables):
     # arrange
     selenium.get('https://www.dsl.sk/user.php?action=login')
