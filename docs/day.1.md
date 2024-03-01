@@ -679,6 +679,9 @@ Od tohto momentu už nebudeme upozorňovaní, že `pytest` túto značku nepozn�
 
   * treba lepšie vymyslieť, ako na správu balíčkov v rámci školenia, nakoľko `poetry` stále prináša viac problémov ako úžiťku :-(
 
+* pri inštalácii rozšírenia pre `pytest` ukázať, že pri spustení sa zobrazí aj zoznam rozšírení
+  * jednoduchá kontrola, či je všetko ok
+
 
 
 

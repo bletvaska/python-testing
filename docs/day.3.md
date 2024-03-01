@@ -1,10 +1,44 @@
 # Day 3: Rest API Testing
 
-Introduction to Requests: HTTP for Humans
-je potrebné nainštalovať balíček request a httpie pre testovanie
+## Morning Excercise: Testing of Login Form
+
+Otestujte prihlasovaci formular na adrese [https://www.dsl.sk/user.php?action=login](https://www.dsl.sk/user.php?action=login) Prihlasovacie meno a heslo pre otestovanie uspesneho prihlasenia je `pytester:pytester`. **Prosim nemenit!**
+
+zistit aktualnu stranku je mozne pomocou: `driver.current_url`
+
+* **ak** zadam spravny login a spravne heslo **tak** ma presmeruje na stranku [https://www.dsl.sk/](https://www.dsl.sk/).
+* **ak** zadam nespravny login a nespravne heslo **tak** zostanem na rovnakej stranke.
+* **ak** zadam login ale nespravne heslo, **tak** zostanem na rovnakej stranke.
+* **ak** zadam spravny login ale nespravne heslo, **tak** zostanem na rovnakej stranke.
+* **ak** zadam login ale nezadam heslo, **tak** zostanem na rovnakej stranke.
+* **ak** odoslem prazdny formular, **tak** sa dostanem na rovnakej stranke.
+
+
+### Riešenie
+
+```python
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import pytest
+
+
+```
+
+
+### Vytvorenie fixture pre prihláseného používateľa
+
+```python
+@pytest.fixture
+def 
+```
+
+
+## Introduction to Requests: HTTP for Humans
+
+je potrebné nainštalovať balíček `request` a `httpie` pre testovanie
 
 ```bash
-pip install requests httpie
+$ pip install requests httpie
 ```
 
 
@@ -300,6 +334,94 @@ ValidationError: 'Invalid' is not of type 'number'
 ```
 
 
+## Mocking
+
+* čo to je?
+
+
+### Inštalácia
+
+Pridať podporu je možné nainštalovaním modulu `pytest-mock`. To urobíme príkazom `pip`:
+
+```bash
+$ pip install pytest-mock
+```
+
+Ak používame `poetry`, tak to urobíme takto:
+
+```bash
+$ poetry add pytest-mock
+```
+
+
+### Príklad použitia
+
+Budeme sa tváriť, že robíme aplikáciu na prácu s filmami
+
+
+### Fixtures
+
+```python
+@pytest.fixture
+def mock_get(mocker):
+  mock = Mock()
+  mocker.patch('requests.get', return_value = mock)
+  return mock
+```
+
+použitie:
+
+```python
+def test_when_get_request_then_status_is_ok(mock_get):
+  # arrange
+  mock_get.return_value.status_code = 200
+
+  # act
+  response = requests.get('http://example.com')
+
+  # assert
+  assert response.status_code == 200
+
+
+def test_when_get_request_then_response_is_json(mock_get):
+  # arrange
+  mock_get.return_value.json.return_value = {'key': 'value'}
+
+  # act
+  response = requests.get('http://example.com')
+
+  # assert
+  assert response.json() == {'key': 'value'}
+```
+
+
+## Paralelné spúšťanie testov
+
+Aktuálne sa testy spúšťajú sekvenčne - každý test sa spustí až po vykonaní predchádzajúceho testu. To samozrejme môže viesť ku veľmi dlhému trvaniu pre vykonanie celej sady testov. A ak sa budeme držať základných pravidiel testovania, minimálne sady testov, ale rovnako tak mnohé jednotkové testy samotné, by sme mali vedieť spúšťať aj paralelne.
+
+Ak chceme zabezpečiť paralelný beh jednotlivých testov, potrebujeme nainštalovať ďalší modul. K dispozícii máme v podstate dva
+
+* [`pytest-xdist`](https://pypi.org/project/pytest-xdist/)
+* [`pytest-paralel`](https://pypi.org/project/pytest-parallel/)
+
+My nainštalujeme ten prvý z nich:
+
+```bash
+$ poetry add pytest-xdist
+```
+
+Pri spúšťaní testov teraz môžeme pomocou voľby `--numprocesses` alebo skrátene `-n` určiť, na koľkých CPU sa majú testy spúšťať. Ak chceme spustiť testy napr. na troch CPU, spustíme ich takto:
+
+```bash
+$ pytest -n 3
+```
+
+Pomocou hodnoty `auto` zabezpečíme, že `pytest` spustí testy na toľkých CPU, koľko ich máme k dispozícii:
+
+```bash
+$ pytest -n auto
+```
+
 ## Links
 
 * [Requests: HTTP for Humans™](https://requests.readthedocs.io/en/latest/) - Domovská stránka modulu `requests`
@@ -309,3 +431,5 @@ ValidationError: 'Invalid' is not of type 'number'
 * https://www.youtube.com/watch?v=mZ8_QgJ5mbs
 * http://httpbin.org/
 * HTTP primer for frontend developers
+* [`pytest-xdist`](https://pytest-xdist.readthedocs.io/en/stable/) - dokumentácia k rozšíreniue `pytest-xdist`
+* [Page Object Models Implementation with Pytest](https://medium.com/@aifakhri/page-object-models-implementation-with-pytest-b9673744b8c0) - Building a well structured pytest test framework with Page Object Models

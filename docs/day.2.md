@@ -252,56 +252,6 @@ def homepage(browser):
 Fixture `browser()` môže byť uložený v súbore `conftest.py` a fixture `homepage()` môže byť uložený v príslušnom module.
 
 
-## Testing of Login Form
-
-Otestujte prihlasovaci formular na adrese [https://www.dsl.sk/user.php?action=login](https://www.dsl.sk/user.php?action=login) Prihlasovacie meno a heslo pre otestovanie uspesneho prihlasenia je `pytester:pytester`. **Prosim nemenit!**
-
-zistit aktualnu stranku je mozne pomocou: `driver.current_url`
-
-* **ak** zadam spravny login a spravne heslo **tak** ma presmeruje na stranku [https://www.dsl.sk/](https://www.dsl.sk/).
-* **ak** zadam nespravny login a nespravne heslo **tak** zostanem na rovnakej stranke.
-* **ak** zadam login ale nespravne heslo, **tak** zostanem na rovnakej stranke.
-* **ak** zadam spravny login ale nespravne heslo, **tak** zostanem na rovnakej stranke.
-* **ak** zadam login ale nezadam heslo, **tak** zostanem na rovnakej stranke.
-* **ak** odoslem prazdny formular, **tak** sa dostanem na rovnakej stranke.
-
-
-### Riešenie
-
-```python
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-import pytest
-
-
-@pytest.fixture(scope="module")
-def driver_azet():
-    driver = webdriver.Chrome()
-    yield driver
-    driver.quit()
-
-
-def test_when_correct_name_password_sent_then_succesfully_logged(driver_azet):
-    username = driver_azet.find_element(By.XPATH, "/html/body/div/div[3]/div[3]/form/div[1]/div/input")
-    username.send_keys("pytester")
-    password = driver_azet.find_element(By.XPATH, "/html/body/div/div[3]/div[3]/form/div[2]/div/input")
-    password.send_keys("pytester")
-    driver_azet.find_element(By.NAME, "submit").click()
-    driver_azet.find_element(By.NAME, "Neskôr").click()
-
-
-    # arrange / act
-    driver_azet.get("https://prihlasenie.azet.sk/")
-
-
-    # assert
-    assert "Azet" in driver_azet.find_element(By.XPATH, '//*[@id="app"]/header/nav/div/div[2]/div/span')
-
-
-    #driver_azet.find_element(By.PARTIAL_LINK_TEXT, "Odhlásiť").click()
-```
-
-
 ## Tips and Tricks
 
 ### Webdriver v Headless režime
@@ -474,6 +424,7 @@ elem.send_keys('pycon', Keys.RETURN)
 * [http://naucse.python.cz/lessons/intro/testing/](http://naucse.python.cz/lessons/intro/testing/)
 * [Selenium WebDriver](https://www.seleniumhq.org/docs/03_webdriver.jsp)
 * [Selenium Easy](https://www.seleniumeasy.com/test/basic-radiobutton-demo.html) - stránky, kde sa dá testovať Selenium
+* [Welcome to the-internet](http://the-internet.herokuapp.com/) - ukazkove stranky s html elementami dobre na stestovanie
 
 
 ## TODO
