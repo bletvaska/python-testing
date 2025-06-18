@@ -1,3 +1,6 @@
+# TODO
+* https://locust.io/ - testovanie zataze
+
 # Day 2: Selenium Basics
 
 
