@@ -13,6 +13,7 @@ Znalosť jazyka Python na tomto školení je nutná.
 * Test cases vs Test suites.
 * Vybrané rozšírenia pre rámec pytest.
 * Testovanie webových stránok pomocou Selenium webdriver-a.
+* Page objekty
 * Testovanie REST API.
 * Tvorba reportov s výsledkami testov.
 * Code Coverage.
@@ -27,3 +28,8 @@ Inštalujeme *VS Code* s týmito rozšíreniami:
 
 * [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
 * [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+
+
+## TODO
+* https://locust.io/ - testovanie zataze
+* mocking
